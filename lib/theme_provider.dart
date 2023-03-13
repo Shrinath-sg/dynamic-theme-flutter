@@ -24,3 +24,4 @@ class MyTheme {
       textTheme: const TextTheme(headline1: TextStyle(color: Colors.red)),
       primaryColor: Colors.white);
 }
+

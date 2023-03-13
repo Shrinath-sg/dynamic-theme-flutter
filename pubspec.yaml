@@ -38,6 +38,7 @@ dependencies:
   provider:
   adaptive_theme: ^3.2.0
   flutter_colorpicker: ^1.0.3
+  shared_preferences: ^2.0.18
 
 dev_dependencies:
   flutter_test:

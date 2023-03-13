@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -6,6 +7,8 @@ class AppColors {
   static final MaterialColor primeryColorOne =
       MaterialColor(0xFF0065ff, colorValues);
 }
+
+const Color? primeryColorOneTypeColor = Color(0xFF0065ff);
 
 Map<int, Color> colorValues = const {
   50: Color.fromRGBO(0, 101, 255, .1),
@@ -38,7 +41,7 @@ extension ToMaterial on Color? {
   }
 }
 
-extension on Color? {
+extension ToIntColor on Color? {
   int? toIntColor() {
     String hexColor = this!.toHex();
     // log("hex  color is $hexColor");
@@ -57,4 +60,18 @@ extension HexColor on Color {
       '${red.toRadixString(16).padLeft(2, '0')}'
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
+}
+
+///* below dunction is to check which color visible clearly on selected color
+
+bool useWhiteForeground(Color backgroundColor, {double bias = 0.0}) {
+  // Old:
+  // return 1.05 / (color.computeLuminance() + 0.05) > 4.5;
+
+  // New:
+  int v = sqrt(pow(backgroundColor.red, 2) * 0.299 +
+          pow(backgroundColor.green, 2) * 0.587 +
+          pow(backgroundColor.blue, 2) * 0.114)
+      .round();
+  return v < 130 + bias ? true : false;
 }
