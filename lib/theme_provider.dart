@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.light;
+  Brightness brightness =
+      WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
-  bool get isDartMode => themeMode == ThemeMode.dark;
+  bool get isDartMode => brightness == Brightness.dark;
 
-  void toggleTheme(bool isOn) {
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners();
-  }
+  // void toggleTheme(bool isOn) {
+  //   themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
+  //   notifyListeners();
+  // }
 }
 
 class MyTheme {
@@ -24,4 +26,3 @@ class MyTheme {
       textTheme: const TextTheme(headline1: TextStyle(color: Colors.red)),
       primaryColor: Colors.white);
 }
-

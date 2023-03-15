@@ -10,33 +10,33 @@ class Global {
   static AdaptiveThemeMode? savedThemeMode;
   static int? savedThemeColor;
 
-   void setCustomTheme(
+  void setCustomTheme(
       {required BuildContext context,
       required Color? themeColor,
       required double? fontSize}) {
     AdaptiveTheme.of(context).setTheme(
       light: ThemeData(
-          brightness: Brightness.light,
-          primarySwatch: themeColor!.toMaterial(),
-          textTheme: const TextTheme().copyWith(
-              titleSmall: Theme.of(context)
-                  .textTheme
-                  .titleSmall!
-                  .copyWith(fontSize: fontSize!))),
+        brightness: Brightness.light,
+        primarySwatch: themeColor!.toMaterial(),
+        cardColor: bgColor,
+        
+        textTheme: const TextTheme().copyWith(
+          titleSmall: TextStyle(fontSize: fontSize),
+        ),
+      ),
       dark: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: themeColor.toMaterial(),
-          textTheme: const TextTheme().copyWith(
-              titleSmall: Theme.of(context)
-                  .textTheme
-                  .titleSmall!
-                  .copyWith(fontSize: fontSize))
+        brightness: Brightness.dark,
+        primarySwatch: themeColor.toMaterial(),
+        primaryColorDark: themeColor,
+        textTheme: const TextTheme().copyWith(
+          titleSmall: TextStyle(fontSize: fontSize),
+        ),
 
-          // primarySwatch: AppColors.primeryColorOne,
-          // floatingActionButtonTheme: FloatingActionButtonThemeData(
-          //     backgroundColor: AppColors.primeryColorOne),
-          // iconTheme: const IconThemeData(color: Colors.red),
-          ),
+        // primarySwatch: AppColors.primeryColorOne,
+        // floatingActionButtonTheme: FloatingActionButtonThemeData(
+        //     backgroundColor: AppColors.primeryColorOne),
+        // iconTheme: const IconThemeData(color: Colors.red),
+      ),
     );
   }
 }

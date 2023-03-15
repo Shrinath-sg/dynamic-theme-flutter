@@ -5,20 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:theme_demo/colors.dart';
 import 'package:theme_demo/golbal.dart';
+import 'package:theme_demo/info_locate_screen/splash_screen.dart';
 import 'package:theme_demo/theme_provider.dart';
 
 import 'constants.dart';
+
 import 'font_provider.dart';
+import 'info_locate_screen/all_cards_type/cards_types.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Global.savedThemeMode = await AdaptiveTheme.getThemeMode();
   final prefs = await SharedPreferences.getInstance();
   Global.savedThemeColor = prefs.getInt(THEME_KEY);
-  inspect(Global.savedThemeMode);
-  print(Global.savedThemeMode);
+  // inspect(Global.savedThemeMode);
+  // print(Global.savedThemeMode);
   // log(AdaptiveTheme.prefKey);
   runApp(const MyApp());
 }
@@ -41,14 +45,20 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext ctx) {
           return AdaptiveTheme(
             builder: (ThemeData light, ThemeData dark) {
-              return MaterialApp(
-                // themeMode: Provider.of<ThemeProvider>(ctx).themeMode,
-                // darkTheme: MzyTheme.darkTheme,
-                theme: light,
+              return Sizer(
+                builder: (BuildContext context, Orientation orientation,
+                    DeviceType deviceType) {
+                  return MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    // themeMode: Provider.of<ThemeProvider>(ctx).themeMode,
+                    // darkTheme: MzyTheme.darkTheme,
+                    theme: light,
 
-                darkTheme: dark,
-                title: 'Flutter Demo',
-                home: const MyHomePage(title: 'Flutter Demo Home Page'),
+                    darkTheme: dark,
+                    title: 'Flutter Demo',
+                    home: AnimatedSplashScreen(),
+                  );
+                },
               );
             },
             initial: Global.savedThemeMode ?? AdaptiveThemeMode.light,
@@ -108,8 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           themeColor: Global.savedThemeColor != null
               ? Color(Global.savedThemeColor!)
               : primeryColorOneTypeColor,
-          fontSize: fontProvider.fontSize ??
-              Theme.of(context).textTheme.titleSmall!.fontSize!);
+          fontSize: fontProvider.titleSmall);
     } catch (err) {
       print(err);
     } finally {
@@ -126,7 +135,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {},
+            onPressed: () {
+              Global().setCustomTheme(
+                  context: context,
+                  themeColor: Global.savedThemeColor != null
+                      ? Color(Global.savedThemeColor!)
+                      : primeryColorOneTypeColor,
+                  fontSize: 25);
+            },
             label: const Text(
               'Demo',
             )),
@@ -184,11 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Global().setCustomTheme(
                               context: context,
                               themeColor: myColor,
-                              fontSize: fontProvider.fontSize ??
-                                  Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .fontSize!);
+                              fontSize: fontProvider.titleSmall);
                           // AdaptiveTheme.of(context).setTheme(
                           //   light: ThemeData(
                           //     brightness: Brightness.light,
@@ -236,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           // backgroundColor: Theme.of(context).primaryColor,
                         ),
-                        Switch(
+                        Switch.adaptive(
                             value: isOn,
                             onChanged: (val) {
                               final fontProvider = Provider.of<FontProvider>(
@@ -246,31 +258,23 @@ class _MyHomePageState extends State<MyHomePage> {
                               setState(() {
                                 isOn = val;
                                 if (isOn) {
-                                  fontProvider.update(Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .fontSize! +
-                                      Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .fontSize!);
+                                  fontProvider.update(value: 2);
                                   getColor();
                                 } else {
-                                  fontProvider.update(Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .fontSize! -
-                                      (Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .fontSize! /
-                                          2));
+                                  fontProvider.update(value: 1);
                                   getColor();
                                 }
                               });
                             })
                       ],
                     ),
+                    ActionChip(
+                        label: const Text('Login Screen'),
+                        onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllCards()),
+                            )),
                   ],
                 ),
         ));
